@@ -1,20 +1,51 @@
 import express from 'express';
-import path from 'path';
-//import cookieParser from 'cookie-parser';
-//import logger from 'morgan';
+import * as path from 'path';
 
-import indexRouter from './routes/index';
-import usersRouter from './routes/users';
+import db from './db';
 
 var app = express();
 
-//app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-//app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '/../public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+GET('/games/create', () => db.games.create());
+GET('/games/add', () => db.games.add());
+GET('/games/all', () => db.games.all());
+
+GET('/players/create', () => db.players.create());
+GET('/players/all', () => db.players.all());
+// add a new player, if it doesn't exist yet, and return the object:
+GET('/players/add/:name', req => {
+  return db.task('add-player', t => {
+    return t.players.findByName(req.params.name)
+      .then(player => {
+        return player || t.players.add(req.params.name);
+      });
+  });
+});
+
+GET('/results/create', () => db.results.create());
+//GET('/results/add', () => db.results.add());
+GET('/results/all', () => db.results.all());
+
+// Generic GET handler;
+function GET (url: string, handler: (req: any) => any) {
+  app.get(url, (req, res) => {
+    handler(req)
+      .then((data: any) => {
+        res.json({
+          success: true,
+          data
+        });
+      })
+      .catch((error: any) => {
+        res.json({
+          success: false,
+          error: error.message || error
+        });
+      });
+  });
+}
 
 module.exports = app;
