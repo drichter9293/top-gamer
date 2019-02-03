@@ -1,11 +1,47 @@
-import { IDatabase } from 'pg-promise';
+import { IDatabase, IMain, ColumnSet } from 'pg-promise';
+import pgPromise = require('pg-promise');
+import { Result } from 'range-parser';
 
 export class ResultsRepository {
-  constructor(db: any) {
+  constructor(db: any, pgp: IMain) {
     this.db = db;
+    this.pgp = pgp;
+
+    this.createColumnSets();
   }
 
   private db: IDatabase<any>;
+  private pgp: IMain;
+  private static cs: ResultsColumnSets;
+
+  // example of setting up ColumnSet objects:
+  private createColumnSets() {
+    // create all ColumnSet objects only once:
+    if (!ResultsRepository.cs) {
+      const helpers = this.pgp.helpers;
+      const cs: ResultsColumnSets = {};
+
+      cs.insert = new helpers.ColumnSet([
+        {
+          name: 'game_id',
+          prop: 'gameID'
+        },
+        {
+          name: 'player_id',
+          prop: 'playerID',
+        },
+        'placement',
+        {
+          name: 'post_game_rating',
+          prop: 'postGameRating',
+        }
+      ], {
+        table: 'results'
+      });
+
+      ResultsRepository.cs = cs;
+    }
+  }
 
   // Creates the table.
   create() {
@@ -18,6 +54,18 @@ export class ResultsRepository {
         post_game_rating INT NOT NULL
       )
     `);
+  }
+
+  getMostRecentResults(playerIDs: number[]) {
+    return this.db.any(`
+      SELECT DISTINCT ON (player_id) player_id, game_id, post_game_rating
+      FROM results
+      ORDER BY player_id, game_id desc
+    `);
+  }
+
+  addResultsForGame(gameResults: any) {
+    return this.pgp.helpers.insert(gameResults, ResultsRepository.cs.insert);
   }
 
   // Adds a new result, and returns the new object.
@@ -33,4 +81,8 @@ export class ResultsRepository {
   all() {
     return this.db.any('SELECT * FROM results');
   }
+}
+
+type ResultsColumnSets = {
+  insert?: ColumnSet
 }

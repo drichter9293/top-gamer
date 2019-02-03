@@ -10,7 +10,7 @@ const initOptions: IOptions<IExtensions> = {
   extend(obj: IExtensions) {
     obj.games = new GamesRepository(obj);
     obj.players = new PlayersRepository(obj);
-    obj.results = new ResultsRepository(obj);
+    obj.results = new ResultsRepository(obj, pgp);
   }
 };
 

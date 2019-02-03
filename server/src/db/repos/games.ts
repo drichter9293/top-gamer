@@ -18,12 +18,12 @@ export class GamesRepository {
   }
 
   // Adds a new game, and returns the new object.
-  add() {
+  add(timePlayed: Date) {
     return this.db.one(`
       INSERT INTO games (time_played)
-      VALUES(now()) 
+      VALUES($1) 
       RETURNING *
-    `);
+    `, timePlayed);
   }
 
   // Returns all games.

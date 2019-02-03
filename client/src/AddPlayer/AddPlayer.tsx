@@ -18,11 +18,13 @@ const AddPlayer: React.FunctionComponent<Props> = ({ players, addPlayer }) => {
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [name, setName] = React.useState('');
 
-  const handleSubmit = () => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const newPlayer: Player = {
       name,
     };
     addPlayer(newPlayer);
+    setDialogOpen(false);
+    event.preventDefault();
   }
   return (
     <>
@@ -33,7 +35,7 @@ const AddPlayer: React.FunctionComponent<Props> = ({ players, addPlayer }) => {
       >
         <DialogTitle id="form-dialog-title">Add Player</DialogTitle>
         <DialogContent>
-          <form>
+          <form id="add-player" onSubmit={handleSubmit}>
             <TextField
               autoFocus
               id="name"
@@ -48,7 +50,7 @@ const AddPlayer: React.FunctionComponent<Props> = ({ players, addPlayer }) => {
           <Button onClick={() => setDialogOpen(false)}>
             Cancel
           </Button>
-          <Button variant="contained" onClick={handleSubmit} color="primary">
+          <Button variant="contained" color="primary" type="submit" form="add-player">
             Save
           </Button>
         </DialogActions>

@@ -8,6 +8,11 @@ export interface Game {
   timePlayed: Date
 }
 
+export interface GameResult {
+  timePlayed: Date,
+  placements: number[][]
+}
+
 export interface Result {
   gameID: number,
   playerID: number,

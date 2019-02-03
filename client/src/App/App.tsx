@@ -3,8 +3,9 @@ import axios from 'axios';
 
 import './App.css';
 
-import { Player, Game, Result } from '../types';
+import { Player, Game, Result, GameResult } from '../types';
 import AddPlayer from '../AddPlayer';
+import AddGame from '../AddGame';
 
 const App: React.FunctionComponent = () => {
   const [ players, setPlayers ] = useState<Player[]>([]);
@@ -49,21 +50,18 @@ const App: React.FunctionComponent = () => {
       name: player.name,
     })
       .then(response => {
-        console.log(response);
+        setPlayers([
+          ...players,
+          response.data.data
+        ]);
       })
       .catch(error => {
         console.log(error);
       })
   }
 
-  const addGame = (
-    time: Date,
-    placements: Array<number | number[]>
-  ) => {
-    axios.post('http://localhost:3001/games/add', {
-      time,
-      placements,
-    })
+  const addGameResult = (gameResult: GameResult) => {
+    axios.post('http://localhost:3001/games/add', gameResult)
       .then(response => {
         console.log(response);
       })
@@ -75,6 +73,7 @@ const App: React.FunctionComponent = () => {
   return (
     <div className="App">
       <AddPlayer players={players} addPlayer={addPlayer}/>
+      <AddGame players={players} addGameResult={addGameResult}/>
       <h1>Users</h1>
       {players.map(player =>
         <div key={player.id}>{player.name}</div>
