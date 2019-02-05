@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '/../public')));
 
-const getResultsForGame: any = (mostRecentResults: any, placements: number[][], gameID: number) => {
+const getResultsForGame: any = (playerRatings: any, placements: number[][], gameID: number) => {
   const results: any[] = [];
   placements.forEach((placement, place) => {
     placement.forEach(playerID => {
@@ -35,10 +35,8 @@ POST('/games/add', req => {
       ( accumulator: number[], currentValue: number ) => accumulator.concat(currentValue),
       []
     );
-    console.log("Player ids", playerIDs);
-    const mostRecentResults = await t.results.getMostRecentResults(playerIDs);
-    console.log("Recent results", mostRecentResults);
-    const gameResults = getResultsForGame(mostRecentResults, req.body.placements, game.id);
+    const playerRatings = await t.results.getPlayerRatings(playerIDs);
+    const gameResults = getResultsForGame(playerRatings, req.body.placements, game.id);
     console.log("Game results", gameResults);
     const query = t.results.addResultsForGame(gameResults);
     await db.any(query);
@@ -47,7 +45,17 @@ POST('/games/add', req => {
 });
 
 GET('/players/create', () => db.players.create());
-GET('/players/all', () => db.players.all());
+GET('/players/all', req => {
+  return db.task('all-players', async t => {
+    const players = await db.players.all();
+    const playerIDs: number[] = players.map(player => player.id);
+    const playerRatings = await t.results.getPlayerRatings(playerIDs);
+    players.forEach(player => {
+      player.rating = playerRatings[player.id];
+    })
+    return playerRatings;
+  });
+});
 // add a new player, if it doesn't exist yet, and return the object:
 POST('/players/add', req => {
   return db.task('add-player', t => {

@@ -76,7 +76,7 @@ const App: React.FunctionComponent = () => {
       <AddGame players={players} addGameResult={addGameResult}/>
       <h1>Users</h1>
       {players.map(player =>
-        <div key={player.id}>{player.name}</div>
+        <div key={player.id}>{player.name} : {player.rating} </div>
       )}
     </div>
   );

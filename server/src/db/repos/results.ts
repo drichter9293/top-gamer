@@ -64,6 +64,14 @@ export class ResultsRepository {
     `);
   }
 
+  async getPlayerRatings(playerIDs: number[]) {
+    const mostRecentResults = await this.getMostRecentResults(playerIDs);
+    return mostRecentResults.reduce((reduction, result) => {
+      reduction[result.player_id] = result.post_game_rating;
+      return reduction;
+    }, {});
+  }
+
   addResultsForGame(gameResults: any) {
     return this.pgp.helpers.insert(gameResults, ResultsRepository.cs.insert);
   }
