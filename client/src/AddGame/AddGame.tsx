@@ -7,6 +7,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+import produce from 'immer';
+
 import { Player, GameResult } from '../types';
 import PlayerSelect from './PlayerSelect';
 
@@ -17,7 +19,11 @@ interface Props {
 
 const AddPlayer: React.FunctionComponent<Props> = ({ players, addGameResult }) => {
   const [dialogOpen, setDialogOpen] = React.useState(false);
-  const [placements, setPlacements] = React.useState<GameResult['placements']>([[-1], [-1, 2], [-1]]);
+  const [placements, setPlacements] = React.useState<GameResult['placements']>([
+    [[-1]],
+    [[-1], [2]],
+    [[3,4], [5]]
+  ]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const gameResult: GameResult = {
@@ -28,10 +34,10 @@ const AddPlayer: React.FunctionComponent<Props> = ({ players, addGameResult }) =
     event.preventDefault();
   }
 
-  const setSelectedPlayer = (placementsIndex: number, placementIndex: number, playerId: number) => {
-    const newPlacements = [...placements];
-    newPlacements[placementsIndex] = [...placements[placementsIndex]];
-    newPlacements[placementsIndex][placementIndex] = playerId;
+  const setSelectedPlayer = (placementIndex: number, teamIndex: number, teamPositionIndex: number, playerID: number) => {
+    const newPlacements = produce(placements, (draftPlacements) => {
+      draftPlacements[placementIndex][teamIndex][teamPositionIndex] = playerID;
+    });
     setPlacements(newPlacements);
   }
 
@@ -45,15 +51,20 @@ const AddPlayer: React.FunctionComponent<Props> = ({ players, addGameResult }) =
         <DialogTitle id="form-dialog-title">Add Game</DialogTitle>
         <DialogContent>
           <form id="add-game" onSubmit={handleSubmit}>
-            { placements.map((placement, placementsIndex) => 
-              <div key={placementsIndex}>
-                { placement.map((playerId, placementIndex) =>
-                  <PlayerSelect
-                    key={playerId}
-                    players={players}
-                    selectedPlayer={playerId}
-                    setSelectedPlayer={setSelectedPlayer.bind(null, placementsIndex, placementIndex)}
-                  />
+            { placements.map((placement, placementIndex) => 
+              <div key={placementIndex}>
+                { placement.map((team, teamIndex) =>
+                  <>
+                    <span>Team { teamIndex }</span>
+                    { team.map((playerID, teamPositionIndex) => 
+                      <PlayerSelect
+                        key={playerID}
+                        players={players}
+                        selectedPlayer={playerID}
+                        setSelectedPlayer={setSelectedPlayer.bind(null, placementIndex, teamIndex, teamPositionIndex)}
+                      />
+                    )}
+                  </>
                 )}
               </div>
             )}

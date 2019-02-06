@@ -4,6 +4,8 @@ import * as path from 'path';
 
 import db from './db';
 
+import { GameResult } from './types';
+
 var app = express();
 app.use(cors());
 
@@ -11,19 +13,31 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '/../public')));
 
-const getResultsForGame: any = (playerRatings: any, placements: number[][], gameID: number) => {
+const getResultsForGame: any = (playerRatings: any, placements: GameResult['placements'], gameID: number) => {
   const results: any[] = [];
   placements.forEach((placement, place) => {
-    placement.forEach(playerID => {
-      results.push({
-        gameID,
-        playerID,
-        placement: place,
-        postGameRating: 1500,
+    placement.forEach(team => {
+      team.forEach(playerID => {
+        results.push({
+          gameID,
+          playerID,
+          placement: place,
+          postGameRating: 1500,
+        });
       });
     });
   });
   return results;
+}
+
+const getPlayerIDs = (placements: GameResult['placements']): number[] => {
+  const playerIDs: number[] = [];
+  placements.forEach(placement => {
+    placement.forEach(team => {
+      playerIDs.concat(team);
+    });
+  }, []);
+  return playerIDs;
 }
 
 GET('/games/create', () => db.games.create());
@@ -31,10 +45,7 @@ GET('/games/all', () => db.games.all());
 POST('/games/add', req => {
   return db.task('add-game-result', async t => {
     const game = await t.games.add(req.body.timePlayed);
-    const playerIDs: number[] = req.body.placements.reduce(
-      ( accumulator: number[], currentValue: number ) => accumulator.concat(currentValue),
-      []
-    );
+    const playerIDs: number[] = getPlayerIDs(req.body.placements);
     const playerRatings = await t.results.getPlayerRatings(playerIDs);
     const gameResults = getResultsForGame(playerRatings, req.body.placements, game.id);
     console.log("Game results", gameResults);
