@@ -27,7 +27,7 @@ const AddPlayer: React.FunctionComponent<Props> = ({ players, addPlayer }) => {
     event.preventDefault();
   }
   return (
-    <>
+    <div key="add-player">
       <Button variant="contained" onClick={() => setDialogOpen(true)}>Add Player</Button>
       <Dialog
         open={dialogOpen}
@@ -47,15 +47,15 @@ const AddPlayer: React.FunctionComponent<Props> = ({ players, addPlayer }) => {
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>
+          <Button key="cancel" onClick={() => setDialogOpen(false)}>
             Cancel
           </Button>
-          <Button variant="contained" color="primary" type="submit" form="add-player">
+          <Button key="save" variant="contained" color="primary" type="submit" form="add-player">
             Save
           </Button>
         </DialogActions>
       </Dialog>
-    </>
+    </div>
   );
 };
 

@@ -6,18 +6,21 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { useTheme } from '@material-ui/styles';
 
 import produce from 'immer';
 
 import { Player, GameResult } from '../types';
 import PlayerSelect from './PlayerSelect';
+import { Theme } from '@material-ui/core';
 
 interface Props {
   players: Player[],
   addGameResult(gameResult: GameResult): void
 }
 
-const AddPlayer: React.FunctionComponent<Props> = ({ players, addGameResult }) => {
+const AddGame: React.FunctionComponent<Props> = ({ players, addGameResult }) => {
+  const theme: Theme = useTheme();
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [placements, setPlacements] = React.useState<GameResult['placements']>([
     [[-1]],
@@ -42,7 +45,7 @@ const AddPlayer: React.FunctionComponent<Props> = ({ players, addGameResult }) =
   }
 
   return (
-    <>
+    <div key="add-game">
       <Button variant="contained" onClick={() => setDialogOpen(true)}>Add Game</Button>
       <Dialog
         open={dialogOpen}
@@ -52,10 +55,10 @@ const AddPlayer: React.FunctionComponent<Props> = ({ players, addGameResult }) =
         <DialogContent>
           <form id="add-game" onSubmit={handleSubmit}>
             { placements.map((placement, placementIndex) => 
-              <div key={placementIndex}>
+              <div key={placementIndex} style={{ display: "flex", alignItems: "center" }}>
+                <span style={{ paddingRight: theme.spacing.unit }}>{placementIndex + 1}</span>
                 { placement.map((team, teamIndex) =>
-                  <>
-                    <span>Team { teamIndex }</span>
+                  <div key={teamIndex}>
                     { team.map((playerID, teamPositionIndex) => 
                       <PlayerSelect
                         key={playerID}
@@ -64,23 +67,23 @@ const AddPlayer: React.FunctionComponent<Props> = ({ players, addGameResult }) =
                         setSelectedPlayer={setSelectedPlayer.bind(null, placementIndex, teamIndex, teamPositionIndex)}
                       />
                     )}
-                  </>
+                  </div>
                 )}
               </div>
             )}
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>
+          <Button key="cancel" onClick={() => setDialogOpen(false)}>
             Cancel
           </Button>
-          <Button variant="contained" color="primary" type="submit" form="add-game">
+          <Button key="save" variant="contained" color="primary" type="submit" form="add-game">
             Save
           </Button>
         </DialogActions>
       </Dialog>
-    </>
+    </div>
   );
 };
 
-export default AddPlayer;
+export default AddGame;

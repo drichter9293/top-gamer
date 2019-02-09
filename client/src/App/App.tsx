@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { createMuiTheme } from '@material-ui/core/styles'
+import { ThemeProvider } from '@material-ui/styles';
 
 import './App.css';
 
@@ -70,15 +72,23 @@ const App: React.FunctionComponent = () => {
       })
   };
 
+  const theme = createMuiTheme({
+    typography: {
+      useNextVariants: true,
+    },
+  });
+
   return (
-    <div className="App">
-      <AddPlayer players={players} addPlayer={addPlayer}/>
-      <AddGame players={players} addGameResult={addGameResult}/>
-      <h1>Users</h1>
-      {players.map(player =>
-        <div key={player.id}>{player.name} : {player.rating} </div>
-      )}
-    </div>
+    <ThemeProvider theme={theme}>
+      <div className="App">
+        <AddPlayer players={players} addPlayer={addPlayer}/>
+        <AddGame players={players} addGameResult={addGameResult}/>
+        <h1>Users</h1>
+        {players.map(player =>
+          <div key={player.id}>{player.name} : {player.rating} </div>
+        )}
+      </div>
+    </ThemeProvider>
   );
 }
 

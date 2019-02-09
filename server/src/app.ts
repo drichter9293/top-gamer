@@ -48,7 +48,6 @@ POST('/games/add', req => {
     const playerIDs: number[] = getPlayerIDs(req.body.placements);
     const playerRatings = await t.results.getPlayerRatings(playerIDs);
     const gameResults = getResultsForGame(playerRatings, req.body.placements, game.id);
-    console.log("Game results", gameResults);
     const query = t.results.addResultsForGame(gameResults);
     await db.any(query);
     return gameResults;
@@ -64,7 +63,7 @@ GET('/players/all', req => {
     players.forEach(player => {
       player.rating = playerRatings[player.id];
     })
-    return playerRatings;
+    return players;
   });
 });
 // add a new player, if it doesn't exist yet, and return the object:
