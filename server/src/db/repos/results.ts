@@ -1,6 +1,6 @@
 import { IDatabase, IMain, ColumnSet } from 'pg-promise';
 import pgPromise = require('pg-promise');
-import { Result } from 'range-parser';
+import { Result, Player, PlayerRatings } from '../../types';
 
 export class ResultsRepository {
   constructor(db: any, pgp: IMain) {
@@ -56,20 +56,24 @@ export class ResultsRepository {
     `);
   }
 
-  getMostRecentResults(playerIDs: number[]) {
+  getMostRecentResults(playerIDs: number[]): Promise<Result[]> {
     return this.db.any(`
-      SELECT DISTINCT ON (player_id) player_id, game_id, post_game_rating
+      SELECT DISTINCT ON (player_id)
+        player_id as "playerID",
+        game_id as "gameID",
+        post_game_rating as "postGameRating"
       FROM results
       ORDER BY player_id, game_id desc
-    `);
+    `) as Promise<Result[]>;
   }
 
-  async getPlayerRatings(playerIDs: number[]) {
+  async getPlayerRatings(playerIDs: number[]): Promise<PlayerRatings> {
     const mostRecentResults = await this.getMostRecentResults(playerIDs);
-    return mostRecentResults.reduce((reduction, result) => {
-      reduction[result.player_id] = result.post_game_rating;
+    const playerRatings = mostRecentResults.reduce((reduction, result) => {
+      reduction[result.playerID] = result.postGameRating;
       return reduction;
-    }, {});
+    }, {} as PlayerRatings);
+    return playerRatings;
   }
 
   addResultsForGame(gameResults: any) {

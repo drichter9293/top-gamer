@@ -7,11 +7,11 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { Player } from '../types';
+import { Player, NewPlayer } from '../types';
 
 interface Props {
-  players: Player[],
-  addPlayer(player: Player): void
+  players: {[playerID: number] : Player},
+  addPlayer(player: NewPlayer): void
 }
 
 const AddPlayer: React.FunctionComponent<Props> = ({ players, addPlayer }) => {
@@ -19,7 +19,7 @@ const AddPlayer: React.FunctionComponent<Props> = ({ players, addPlayer }) => {
   const [name, setName] = React.useState('');
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    const newPlayer: Player = {
+    const newPlayer: NewPlayer = {
       name,
     };
     addPlayer(newPlayer);

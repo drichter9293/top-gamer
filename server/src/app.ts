@@ -5,6 +5,7 @@ import * as path from 'path';
 import db from './db';
 
 import { GameResult } from './types';
+import { getResultsForGame } from './algorithms/winner-take-all'; 
 
 var app = express();
 app.use(cors());
@@ -12,23 +13,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '/../public')));
-
-const getResultsForGame: any = (playerRatings: any, placements: GameResult['placements'], gameID: number) => {
-  const results: any[] = [];
-  placements.forEach((placement, place) => {
-    placement.forEach(team => {
-      team.forEach(playerID => {
-        results.push({
-          gameID,
-          playerID,
-          placement: place,
-          postGameRating: 1500,
-        });
-      });
-    });
-  });
-  return results;
-}
 
 const getPlayerIDs = (placements: GameResult['placements']): number[] => {
   const playerIDs: number[] = [];

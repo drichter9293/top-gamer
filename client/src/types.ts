@@ -1,7 +1,11 @@
 export interface Player {
-  id?: number,
+  id: number,
   name: string
-  rating?: number,
+  rating: number,
+}
+
+export interface NewPlayer {
+  name: string,
 }
 
 export interface Game {

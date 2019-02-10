@@ -5,19 +5,22 @@ import { ThemeProvider } from '@material-ui/styles';
 
 import './App.css';
 
-import { Player, Game, Result, GameResult } from '../types';
+import { NewPlayer, Player, Result, GameResult } from '../types';
 import AddPlayer from '../AddPlayer';
 import AddGame from '../AddGame';
+import produce from 'immer';
 
 const App: React.FunctionComponent = () => {
-  const [ players, setPlayers ] = useState<Player[]>([]);
-  const [ games, setGames ] = useState<Game[]>([]);
-  const [ results, setResults ] = useState<Result[]>([]);
+  const [ players, setPlayers ] = useState<{[playerID: number] : Player}>({});
 
   const fetchPlayerData = async () => {
     const response = await fetch('/players/all');
     const json = await response.json();
-    const players : Player[] = json.data;
+    const playersData = json.data as Player[];
+    const players : {[playerID: number] : Player} = playersData.reduce((accumulator, player: Player) => {
+      accumulator[player.id] = player;
+      return accumulator;
+    }, {} as {[playerID: number] : Player});
     setPlayers(players);
   }
 
@@ -25,37 +28,24 @@ const App: React.FunctionComponent = () => {
     fetchPlayerData();
   }, []);
 
-  const fetchGameData = async () => {
-    const response = await fetch('/games/all');
-    const json = await response.json();
-    const games : Game[] = json.data;
-    setGames(games);
-  }
+  const updatePlayerRating = (playerID: number, newRating: number) => {
+    const updatedPlayers = produce(players, draft => {
+      draft[playerID]['rating'] = newRating;
+    });
+    console.log(updatedPlayers);
+    setPlayers(updatedPlayers)
+  };
 
-  useEffect(() => {
-    fetchGameData();
-  }, []);
-
-  const fetchResultData = async () => {
-    const response = await fetch('/games/all');
-    const json = await response.json();
-    const results : Result[] = json.data;
-    setResults(results);
-  }
-
-  useEffect(() => {
-    fetchResultData();
-  }, []);
-
-  const addPlayer = (player: Player) => {
+  const addPlayer = (player: NewPlayer) => {
     axios.post('http://localhost:3001/players/add', {
       name: player.name,
     })
       .then(response => {
-        setPlayers([
-          ...players,
-          response.data.data
-        ]);
+        const newPlayer = response.data.data;
+        const updatedPlayers = produce(players, draft => {
+          draft[newPlayer['id']] = newPlayer;
+        });
+        setPlayers(updatedPlayers);
       })
       .catch(error => {
         console.log(error);
@@ -65,7 +55,13 @@ const App: React.FunctionComponent = () => {
   const addGameResult = (gameResult: GameResult) => {
     axios.post('http://localhost:3001/games/add', gameResult)
       .then(response => {
-        console.log(response);
+        const results = response.data.data;
+        const updatedPlayers = produce(players, draft => {
+          results.forEach((result: Result) => {
+            draft[result.playerID].rating = result.postGameRating;
+          });
+        });
+        setPlayers(updatedPlayers)
       })
       .catch(error => {
         console.log(error);
@@ -78,14 +74,16 @@ const App: React.FunctionComponent = () => {
     },
   });
 
+  const sortedPlayers = Object.entries(players).sort((a, b) => b[1].rating - a[1].rating);
+
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
         <AddPlayer players={players} addPlayer={addPlayer}/>
         <AddGame players={players} addGameResult={addGameResult}/>
         <h1>Users</h1>
-        {players.map(player =>
-          <div key={player.id}>{player.name} : {player.rating} </div>
+        {sortedPlayers.map(([playerID, player]) =>
+          <div key={playerID}>{player.name} : {player.rating} </div>
         )}
       </div>
     </ThemeProvider>

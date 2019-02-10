@@ -1,7 +1,7 @@
 export interface Player {
   id?: number,
   name: string
-  rating?: number,
+  rating: number,
 }
 
 export interface Game {
@@ -9,9 +9,11 @@ export interface Game {
   timePlayed: Date
 }
 
-type Team = number[];
+export type Team = number[];
 
 type Placement = Team[];
+
+export interface PlayerRatings { [playerID: number]: number }
 
 export interface GameResult {
   timePlayed: Date,

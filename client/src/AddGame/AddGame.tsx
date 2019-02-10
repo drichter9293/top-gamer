@@ -15,7 +15,7 @@ import PlayerSelect from './PlayerSelect';
 import { Theme } from '@material-ui/core';
 
 interface Props {
-  players: Player[],
+  players: {[playerID: number] : Player },
   addGameResult(gameResult: GameResult): void
 }
 
@@ -25,7 +25,6 @@ const AddGame: React.FunctionComponent<Props> = ({ players, addGameResult }) => 
   const [placements, setPlacements] = React.useState<GameResult['placements']>([
     [[-1]],
     [[-1], [2]],
-    [[3,4], [5]]
   ]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -34,6 +33,7 @@ const AddGame: React.FunctionComponent<Props> = ({ players, addGameResult }) => 
       placements,
     };
     addGameResult(gameResult);
+    setDialogOpen(false);
     event.preventDefault();
   }
 

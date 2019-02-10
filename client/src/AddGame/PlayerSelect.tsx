@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface Props {
-  players: Player[], 
+  players: {[playerID: number]: Player}, 
   selectedPlayer: number,
   setSelectedPlayer(playerId: number): void
 }
@@ -40,9 +40,9 @@ const PlayerSelect: React.FunctionComponent<Props> = ({ players, selectedPlayer,
         <MenuItem key={"-1"} value="-1">
           <em>None</em>
         </MenuItem>
-        { players.map(player => 
-          <MenuItem key={player.id} value={player.id}>{player.name}</MenuItem>  
-        )}
+        { Object.entries(players).map(([playerID, player]) => (
+          <MenuItem key={playerID} value={playerID}>{player.name}</MenuItem>  
+        ))}
       </Select>
     </FormControl>
   )
