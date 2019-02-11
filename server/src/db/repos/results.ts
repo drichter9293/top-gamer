@@ -1,6 +1,5 @@
 import { IDatabase, IMain, ColumnSet } from 'pg-promise';
-import pgPromise = require('pg-promise');
-import { Result, Player, PlayerRatings } from '../../types';
+import { Result, PlayerRatings } from '../../types';
 
 export class ResultsRepository {
   constructor(db: any, pgp: IMain) {
@@ -51,7 +50,7 @@ export class ResultsRepository {
         player_id INT REFERENCES players(id),
         PRIMARY KEY (game_id, player_id),
         placement INT NOT NULL,
-        post_game_rating INT NOT NULL
+        post_game_rating REAL NOT NULL
       )
     `);
   }
@@ -65,15 +64,6 @@ export class ResultsRepository {
       FROM results
       ORDER BY player_id, game_id desc
     `) as Promise<Result[]>;
-  }
-
-  async getPlayerRatings(playerIDs: number[]): Promise<PlayerRatings> {
-    const mostRecentResults = await this.getMostRecentResults(playerIDs);
-    const playerRatings = mostRecentResults.reduce((reduction, result) => {
-      reduction[result.playerID] = result.postGameRating;
-      return reduction;
-    }, {} as PlayerRatings);
-    return playerRatings;
   }
 
   addResultsForGame(gameResults: any) {

@@ -4,7 +4,7 @@ import * as path from 'path';
 
 import db from './db';
 
-import { GameResult } from './types';
+import { Result, GameResult } from './types';
 import { getResultsForGame } from './algorithms/winner-take-all'; 
 
 var app = express();
@@ -29,8 +29,7 @@ GET('/games/all', () => db.games.all());
 POST('/games/add', req => {
   return db.task('add-game-result', async t => {
     const game = await t.games.add(req.body.timePlayed);
-    const playerIDs: number[] = getPlayerIDs(req.body.placements);
-    const playerRatings = await t.results.getPlayerRatings(playerIDs);
+    const playerRatings = await t.players.getPlayerRatings();
     const gameResults = getResultsForGame(playerRatings, req.body.placements, game.id);
     const query = t.results.addResultsForGame(gameResults);
     await db.any(query);
@@ -42,8 +41,7 @@ GET('/players/create', () => db.players.create());
 GET('/players/all', req => {
   return db.task('all-players', async t => {
     const players = await db.players.all();
-    const playerIDs: number[] = players.map(player => player.id);
-    const playerRatings = await t.results.getPlayerRatings(playerIDs);
+    const playerRatings = await t.players.getPlayerRatings();
     players.forEach(player => {
       player.rating = playerRatings[player.id];
     })

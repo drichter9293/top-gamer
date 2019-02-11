@@ -1,0 +1,1 @@
+export const STARTING_ELO_RATING = 1500;

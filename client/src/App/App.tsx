@@ -28,14 +28,6 @@ const App: React.FunctionComponent = () => {
     fetchPlayerData();
   }, []);
 
-  const updatePlayerRating = (playerID: number, newRating: number) => {
-    const updatedPlayers = produce(players, draft => {
-      draft[playerID]['rating'] = newRating;
-    });
-    console.log(updatedPlayers);
-    setPlayers(updatedPlayers)
-  };
-
   const addPlayer = (player: NewPlayer) => {
     axios.post('http://localhost:3001/players/add', {
       name: player.name,
@@ -81,9 +73,9 @@ const App: React.FunctionComponent = () => {
       <div className="App">
         <AddPlayer players={players} addPlayer={addPlayer}/>
         <AddGame players={players} addGameResult={addGameResult}/>
-        <h1>Users</h1>
-        {sortedPlayers.map(([playerID, player]) =>
-          <div key={playerID}>{player.name} : {player.rating} </div>
+        <h1>Leaderboard</h1>
+        {sortedPlayers.map(([playerID, player], index) =>
+          <div key={playerID}>{index + 1}. {player.name} : {player.rating.toFixed(1)}</div>
         )}
       </div>
     </ThemeProvider>
