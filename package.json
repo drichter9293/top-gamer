@@ -1,0 +1,27 @@
+{
+  "name": "leaderboard",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "install": "(cd client && npm i) && (cd server && npm i)",
+    "start": "concurrently \"cd client && PORT=3000 npm start\" \"cd server && PORT=3001 npm start\"",
+    "build": "concurrently \"cd client && npm build\" \"cd server && npm build\"",
+    "heroku-postbuild": "npm build",
+    "start:prod": "cd server && npm run start:prod"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/drichter9293/top-gamer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/drichter9293/top-gamer/issues"
+  },
+  "homepage": "https://github.com/drichter9293/top-gamer#readme",
+  "devDependencies": {
+    "concurrently": "^4.1.0"
+  }
+}

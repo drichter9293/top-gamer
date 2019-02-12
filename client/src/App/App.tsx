@@ -29,7 +29,7 @@ const App: React.FunctionComponent = () => {
   }, []);
 
   const addPlayer = (player: NewPlayer) => {
-    axios.post('http://localhost:3001/players/add', {
+    axios.post('/players/add', {
       name: player.name,
     })
       .then(response => {
@@ -45,7 +45,7 @@ const App: React.FunctionComponent = () => {
   }
 
   const addGameResult = (gameResult: GameResult) => {
-    axios.post('http://localhost:3001/games/add', gameResult)
+    axios.post('/games/add', gameResult)
       .then(response => {
         const results = response.data.data;
         const updatedPlayers = produce(players, draft => {

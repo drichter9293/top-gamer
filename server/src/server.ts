@@ -1,18 +1,21 @@
 import express from 'express';
 import cors from 'cors';
-import * as path from 'path';
+import path from 'path';
 
 import db from './db';
 
 import { Result, GameResult } from './types';
-import { getResultsForGame } from './algorithms/winner-take-all'; 
+import { getResultsForGame } from './algorithms/winner-take-all';
 
-var app = express();
+const app = express();
 app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, '/../public')));
+
+const staticFiles = express.static(path.join(__dirname, '../../client/build'))
+// pass the static files (react app) to the express app. 
+app.use(staticFiles)
 
 const getPlayerIDs = (placements: GameResult['placements']): number[] => {
   const playerIDs: number[] = [];
@@ -99,4 +102,9 @@ function POST (url: string, handler: (req: any) => any) {
   });
 }
 
-module.exports = app;
+app.use('/*', staticFiles)
+
+app.set('port', (process.env.PORT || 3001))
+app.listen(app.get('port'), () => {
+  console.log(`Listening on ${app.get('port')}`)
+})

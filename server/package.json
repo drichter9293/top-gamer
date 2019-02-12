@@ -1,12 +1,13 @@
 {
   "name": "server",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
-  "main": "src/app.js",
+  "main": "src/server.js",
   "scripts": {
     "build": "tsc",
     "prestart": "npm run build",
-    "start": "PORT=3001 node ./bin/www"
+    "start": "PORT=3001 node ./bin/www",
+    "start:prod": "node build/server.js"
   },
   "dependencies": {
     "@types/cors": "^2.8.4",
