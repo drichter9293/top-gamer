@@ -12,7 +12,8 @@ import produce from 'immer';
 
 import { Player, GameResult } from '../types';
 import PlayerSelect from './PlayerSelect';
-import { Theme } from '@material-ui/core';
+import { Theme, IconButton } from '@material-ui/core';
+import { AddCircleOutline } from '@material-ui/icons';
 
 interface Props {
   players: {[playerID: number] : Player },
@@ -24,7 +25,7 @@ const AddGame: React.FunctionComponent<Props> = ({ players, addGameResult }) => 
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [placements, setPlacements] = React.useState<GameResult['placements']>([
     [[-1]],
-    [[-1], [2]],
+    [[-1]],
   ]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -40,6 +41,13 @@ const AddGame: React.FunctionComponent<Props> = ({ players, addGameResult }) => 
   const setSelectedPlayer = (placementIndex: number, teamIndex: number, teamPositionIndex: number, playerID: number) => {
     const newPlacements = produce(placements, (draftPlacements) => {
       draftPlacements[placementIndex][teamIndex][teamPositionIndex] = playerID;
+    });
+    setPlacements(newPlacements);
+  }
+
+  const addTeam = (placementIndex: number) => {
+    const newPlacements = produce(placements, (draftPlacements) => {
+      draftPlacements[placementIndex].push([-1]);
     });
     setPlacements(newPlacements);
   }
@@ -69,6 +77,9 @@ const AddGame: React.FunctionComponent<Props> = ({ players, addGameResult }) => 
                     )}
                   </div>
                 )}
+                <IconButton aria-label="Add Player" color="primary" onClick={addTeam.bind(null, placementIndex)}>
+                  <AddCircleOutline />
+                </IconButton>
               </div>
             )}
           </form>
