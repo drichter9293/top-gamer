@@ -45,12 +45,17 @@ POST('/games/add', req => {
 GET('/players/create', () => db.players.create());
 GET('/players/all', req => {
   return db.task('all-players', async t => {
-    const players = await db.players.all();
-    const playerRatings = await t.players.getPlayerRatings();
-    players.forEach(player => {
-      player.rating = playerRatings[player.id];
-    })
-    return players;
+    try {
+      const players = await db.players.all();
+      const playerRatings = await t.players.getPlayerRatings();
+      players.forEach(player => {
+        player.rating = playerRatings[player.id];
+      })
+      return players;
+    } catch(err) {
+      console.log(err);
+      return "Error getting all players";
+    }
   });
 });
 // add a new player, if it doesn't exist yet, and return the object:
