@@ -33,11 +33,13 @@ const App: React.FunctionComponent = () => {
       name: player.name,
     })
       .then(response => {
-        const newPlayer = response.data.data;
-        const updatedPlayers = produce(players, draft => {
-          draft[newPlayer['id']] = newPlayer;
-        });
-        setPlayers(updatedPlayers);
+        if (response.data.success) {
+          const newPlayer = response.data.data;
+          const updatedPlayers = produce(players, draft => {
+            draft[newPlayer['id']] = newPlayer;
+          });
+          setPlayers(updatedPlayers);
+        }
       })
       .catch(error => {
         console.log(error);
