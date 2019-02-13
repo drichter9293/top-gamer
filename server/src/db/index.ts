@@ -20,8 +20,6 @@ const pgp: IMain = pgPromise(initOptions);
 const config = {
   host: process.env.DATABASE_URL || 'localhost',
   port: 5432,
-  database: 'leaderboard',
-  user: 'drichter'
 };
 
 const db = <IDatabase<IExtensions> & IExtensions>pgp(config);

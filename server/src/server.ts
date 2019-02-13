@@ -7,6 +7,8 @@ import db from './db';
 import { Result, GameResult } from './types';
 import { getResultsForGame } from './algorithms/winner-take-all';
 
+import { STARTING_ELO_RATING } from './constants';
+
 const app = express();
 app.use(cors());
 
@@ -53,11 +55,14 @@ GET('/players/all', req => {
 });
 // add a new player, if it doesn't exist yet, and return the object:
 POST('/players/add', req => {
-  return db.task('add-player', t => {
-    return t.players.findByName(req.body.name)
-      .then(player => {
-        return player || t.players.add(req.body.name);
-      });
+  return db.task('add-player', async t => {
+    const player = await t.players.findByName(req.body.name);
+    if (player) {
+      return player;
+    }
+    const newPlayer = await t.players.add(req.body.name);
+    newPlayer.rating = STARTING_ELO_RATING;
+    return newPlayer;
   });
 });
 
