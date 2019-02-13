@@ -1,7 +1,7 @@
 import { Team, GameResult, PlayerRatings, Result } from '../types';
 import { computeQ } from '../utils/elo';
 
-const K = 24;
+const K = 48;
 
 const getEloForTeam = (team: Team, playerRatings: PlayerRatings): number => {
   const averageElo = team.reduce((eloSum, playerID) => {
