@@ -16,13 +16,22 @@ const initOptions: IOptions<IExtensions> = {
 
 const pgp: IMain = pgPromise(initOptions);
 
-// Database connection parameters:
-const config = {
-  host: process.env.DATABASE_URL || 'localhost',
-  port: 5432,
-  ssl: process.env.NODE_ENV === 'production',
-};
-
-const db = <IDatabase<IExtensions> & IExtensions>pgp(config);
+let db: IDatabase<IExtensions> & IExtensions;
+if (process.env.NODE_ENV === 'production') {
+  if (process.env.DATABASE_URL) {
+    pgp.pg.defaults.ssl = true;
+    db = pgp(process.env.DATABASE_URL);
+  }
+  else {
+    throw Error('DATABASE_URL is undefined');
+  }
+}
+else {
+  const config = {
+    host: 'localhost',
+    port: 5432,
+  };
+  db = pgp(config);
+}
 
 export default db;
