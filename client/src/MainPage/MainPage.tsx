@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { createMuiTheme } from '@material-ui/core/styles'
-import { ThemeProvider } from '@material-ui/styles';
-
-import './App.css';
+import { Theme, withStyles } from '@material-ui/core/styles'
+import { WithStyles } from '@material-ui/styles';
 
 import { NewPlayer, Player, Result, GameResult } from '../types';
 import Leaderboard from '../Leaderboard';
 import AddPlayer from '../AddPlayer';
 import AddGame from '../AddGame';
 import produce from 'immer';
-import { CssBaseline } from '@material-ui/core';
 
-import MainPage from '../MainPage';
+const styles = (theme: Theme) => ({
+  buttonRow: {
+    margin: theme.spacing.unit,
+    display: 'flex',
+    justifyContent: 'center',
+  },
+});
 
-const App: React.FunctionComponent = () => {
+interface Props extends WithStyles<typeof styles> {}
+
+const MainPage: React.FunctionComponent<Props> = ({ classes }) => {
   const [ players, setPlayers ] = useState<{[playerID: number] : Player}>({});
 
   const fetchPlayerData = async () => {
@@ -66,18 +71,15 @@ const App: React.FunctionComponent = () => {
       })
   };
 
-  const theme = createMuiTheme({
-    typography: {
-      useNextVariants: true,
-    },
-  });
-
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline/>
-      <MainPage />
-    </ThemeProvider>
+    <div className="App">
+      <div className={classes.buttonRow}>
+        <AddPlayer players={players} addPlayer={addPlayer}/>
+        <AddGame players={players} addGameResult={addGameResult}/>
+      </div>
+      <Leaderboard players={players} />
+    </div>
   );
 }
 
-export default App;
+export default withStyles(styles)(MainPage);

@@ -6,15 +6,28 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { Theme, withStyles } from '@material-ui/core/styles';
+import { WithStyles } from '@material-ui/styles';
+
+import { PersonAdd } from '@material-ui/icons';
 
 import { Player, NewPlayer } from '../types';
 
-interface Props {
+const styles = (theme: Theme) => ({
+  addPlayerButton: {
+    marginRight: theme.spacing.unit * 2,
+  },
+  addPlayerIcon: {
+    marginRight: theme.spacing.unit,
+  }
+});
+
+interface Props extends WithStyles<typeof styles> {
   players: {[playerID: number] : Player},
   addPlayer(player: NewPlayer): void
 }
 
-const AddPlayer: React.FunctionComponent<Props> = ({ players, addPlayer }) => {
+const AddPlayer: React.FunctionComponent<Props> = ({ players, addPlayer, classes }) => {
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [name, setName] = React.useState('');
 
@@ -28,7 +41,10 @@ const AddPlayer: React.FunctionComponent<Props> = ({ players, addPlayer }) => {
   }
   return (
     <div key="add-player">
-      <Button variant="contained" onClick={() => setDialogOpen(true)}>Add Player</Button>
+      <Button variant="outlined" color="primary" className={classes.addPlayerButton} onClick={() => setDialogOpen(true)}>
+        <PersonAdd className={classes.addPlayerIcon}/>
+        Add Player
+      </Button>
       <Dialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
@@ -59,4 +75,4 @@ const AddPlayer: React.FunctionComponent<Props> = ({ players, addPlayer }) => {
   );
 };
 
-export default AddPlayer;
+export default withStyles(styles)(AddPlayer);

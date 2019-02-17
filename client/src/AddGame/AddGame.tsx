@@ -6,21 +6,28 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { withStyles } from '@material-ui/core/styles';
 import { useTheme } from '@material-ui/styles';
 
 import produce from 'immer';
 
 import { Player, GameResult } from '../types';
 import PlayerSelect from './PlayerSelect';
-import { Theme, IconButton } from '@material-ui/core';
-import { AddCircleOutline } from '@material-ui/icons';
+import { Theme, IconButton, WithStyles } from '@material-ui/core';
+import { PersonAdd, VideogameAsset } from '@material-ui/icons';
 
-interface Props {
+const styles = (theme: Theme) => ({
+  addGameIcon: {
+    marginRight: theme.spacing.unit, 
+  }
+});
+
+interface Props extends WithStyles<typeof styles> {
   players: {[playerID: number] : Player },
   addGameResult(gameResult: GameResult): void
 }
 
-const AddGame: React.FunctionComponent<Props> = ({ players, addGameResult }) => {
+const AddGame: React.FunctionComponent<Props> = ({ players, addGameResult, classes }) => {
   const theme: Theme = useTheme();
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [placements, setPlacements] = React.useState<GameResult['placements']>([
@@ -54,7 +61,10 @@ const AddGame: React.FunctionComponent<Props> = ({ players, addGameResult }) => 
 
   return (
     <div key="add-game">
-      <Button variant="contained" onClick={() => setDialogOpen(true)}>Add Game</Button>
+      <Button variant="contained" color="primary" onClick={() => setDialogOpen(true)}>
+        <VideogameAsset className={classes.addGameIcon}/>
+        Add Game
+      </Button>
       <Dialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
@@ -78,7 +88,7 @@ const AddGame: React.FunctionComponent<Props> = ({ players, addGameResult }) => 
                   </div>
                 )}
                 <IconButton aria-label="Add Player" color="primary" onClick={addTeam.bind(null, placementIndex)}>
-                  <AddCircleOutline />
+                  <PersonAdd />
                 </IconButton>
               </div>
             )}
@@ -97,4 +107,4 @@ const AddGame: React.FunctionComponent<Props> = ({ players, addGameResult }) => 
   );
 };
 
-export default AddGame;
+export default withStyles(styles)(AddGame);
