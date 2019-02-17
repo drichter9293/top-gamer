@@ -1,9 +1,11 @@
 import React from 'react';
-import { Typography, Paper, List, ListItem, Card, ListItemAvatar, Avatar } from '@material-ui/core';
+import { Typography, Paper, List, ListItem, ListItemAvatar } from '@material-ui/core';
 import { withStyles, Theme } from '@material-ui/core/styles';
 
 import { Player } from '../types';
 import { WithStyles } from '@material-ui/styles';
+
+import PlayerAvatar from '../PlayerAvatar';
 
 const styles = (theme: Theme) => ({
   '@global': {
@@ -47,9 +49,9 @@ const Leaderboard: React.FunctionComponent<Props> = ({ players, classes }) => {
         <ListItem key={playerID}>
           <div className={classes.listBody}>
             <Typography key="place" variant="h5" className={classes.placement}>{index + 1}</Typography>
-            <ListItemAvatar className={classes.playerIcon}>
-              <Avatar />
-            </ListItemAvatar>
+            <div className={classes.playerIcon}>
+              <PlayerAvatar player={player}/>
+            </div>
             <Typography key="name" variant="h5" className={classes.playerName}>{player.name}</Typography>
             <Typography key="rating" variant="h5">{player.rating.toFixed(1)}</Typography>
           </div>
