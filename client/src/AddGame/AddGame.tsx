@@ -1,20 +1,13 @@
 import React from 'react';
 
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { withStyles } from '@material-ui/core/styles';
-import { useTheme } from '@material-ui/styles';
+import { IconButton, Button, Dialog, DialogTitle, DialogActions, DialogContent, Theme } from '@material-ui/core';
+import { useTheme, withStyles, WithStyles } from '@material-ui/styles';
+import { PersonAdd, VideogameAsset } from '@material-ui/icons';
 
 import produce from 'immer';
 
 import { Player, GameResult } from '../types';
 import PlayerSelect from './PlayerSelect';
-import { Theme, IconButton, WithStyles } from '@material-ui/core';
-import { PersonAdd, VideogameAsset } from '@material-ui/icons';
 
 const styles = (theme: Theme) => ({
   addGameIcon: {
