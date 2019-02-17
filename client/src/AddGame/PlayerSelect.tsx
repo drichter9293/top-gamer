@@ -12,19 +12,23 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface Props {
-  players: {[playerID: number]: Player}, 
-  selectedPlayer: number,
-  setSelectedPlayer(playerId: number): void
+  players: { [playerID: number]: Player };
+  selectedPlayer: number;
+  setSelectedPlayer(playerId: number): void;
 }
 
-const PlayerSelect: React.FunctionComponent<Props> = ({ players, selectedPlayer, setSelectedPlayer }) => {
+const PlayerSelect: React.FunctionComponent<Props> = ({
+  players,
+  selectedPlayer,
+  setSelectedPlayer,
+}) => {
   const classes = useStyles();
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedPlayer(+event.target.value);
-  }
+  };
 
-  const key = "player" + selectedPlayer;
+  const key = 'player' + selectedPlayer;
 
   return (
     <FormControl className={classes.formControl}>
@@ -37,15 +41,17 @@ const PlayerSelect: React.FunctionComponent<Props> = ({ players, selectedPlayer,
           id: key,
         }}
       >
-        <MenuItem key={"-1"} value="-1">
+        <MenuItem key={'-1'} value="-1">
           <em>None</em>
         </MenuItem>
-        { Object.entries(players).map(([playerID, player]) => (
-          <MenuItem key={playerID} value={playerID}>{player.name}</MenuItem>  
+        {Object.entries(players).map(([playerID, player]) => (
+          <MenuItem key={playerID} value={playerID}>
+            {player.name}
+          </MenuItem>
         ))}
       </Select>
     </FormControl>
-  )
-}
+  );
+};
 
 export default PlayerSelect;

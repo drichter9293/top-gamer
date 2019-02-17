@@ -14,10 +14,10 @@ const App: React.FunctionComponent = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline/>
+      <CssBaseline />
       <MainPage />
     </ThemeProvider>
   );
-}
+};
 
 export default App;

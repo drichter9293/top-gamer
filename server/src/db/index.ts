@@ -1,7 +1,12 @@
-import {IMain, IDatabase, IOptions} from 'pg-promise';
+import { IMain, IDatabase, IOptions } from 'pg-promise';
 import pgPromise from 'pg-promise';
 
-import { IExtensions, GamesRepository, PlayersRepository, ResultsRepository } from './repos';
+import {
+  IExtensions,
+  GamesRepository,
+  PlayersRepository,
+  ResultsRepository,
+} from './repos';
 
 // pg-promise initialization options:
 const initOptions: IOptions<IExtensions> = {
@@ -11,7 +16,7 @@ const initOptions: IOptions<IExtensions> = {
     obj.games = new GamesRepository(obj);
     obj.players = new PlayersRepository(obj);
     obj.results = new ResultsRepository(obj, pgp);
-  }
+  },
 };
 
 const pgp: IMain = pgPromise(initOptions);
@@ -21,12 +26,10 @@ if (process.env.NODE_ENV === 'production') {
   if (process.env.DATABASE_URL) {
     pgp.pg.defaults.ssl = true;
     db = pgp(process.env.DATABASE_URL);
-  }
-  else {
+  } else {
     throw Error('DATABASE_URL is undefined');
   }
-}
-else {
+} else {
   const config = {
     host: 'localhost',
     port: 5432,

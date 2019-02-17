@@ -9,7 +9,7 @@ import PlayerAvatar from '../PlayerAvatar';
 const styles = (theme: Theme) => ({
   '@global': {
     body: {
-      ...theme.typography.body1
+      ...theme.typography.body1,
     },
   },
   paper: {
@@ -34,28 +34,46 @@ const styles = (theme: Theme) => ({
 });
 
 interface Props extends WithStyles<typeof styles> {
-  players: {[playerID: number] : Player }
+  players: { [playerID: number]: Player };
 }
 
 const Leaderboard: React.FunctionComponent<Props> = ({ players, classes }) => {
-  const sortedPlayers = Object.entries(players).sort((a, b) => b[1].rating - a[1].rating);
+  const sortedPlayers = Object.entries(players).sort(
+    (a, b) => b[1].rating - a[1].rating
+  );
 
   return (
     <Paper className={classes.paper}>
-      <Typography variant="h3" gutterBottom>Leaderboard</Typography>
+      <Typography variant="h3" gutterBottom>
+        Leaderboard
+      </Typography>
       <List>
-      {sortedPlayers.map(([playerID, player], index) =>
-        <ListItem key={playerID}>
-          <div className={classes.listBody}>
-            <Typography key="place" variant="h5" className={classes.placement}>{index + 1}</Typography>
-            <div className={classes.playerIcon}>
-              <PlayerAvatar player={player}/>
+        {sortedPlayers.map(([playerID, player], index) => (
+          <ListItem key={playerID}>
+            <div className={classes.listBody}>
+              <Typography
+                key="place"
+                variant="h5"
+                className={classes.placement}
+              >
+                {index + 1}
+              </Typography>
+              <div className={classes.playerIcon}>
+                <PlayerAvatar player={player} />
+              </div>
+              <Typography
+                key="name"
+                variant="h5"
+                className={classes.playerName}
+              >
+                {player.name}
+              </Typography>
+              <Typography key="rating" variant="h5">
+                {player.rating.toFixed(1)}
+              </Typography>
             </div>
-            <Typography key="name" variant="h5" className={classes.playerName}>{player.name}</Typography>
-            <Typography key="rating" variant="h5">{player.rating.toFixed(1)}</Typography>
-          </div>
-        </ListItem>
-      )}
+          </ListItem>
+        ))}
       </List>
     </Paper>
   );
