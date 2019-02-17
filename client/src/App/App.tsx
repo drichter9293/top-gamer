@@ -6,9 +6,11 @@ import { ThemeProvider } from '@material-ui/styles';
 import './App.css';
 
 import { NewPlayer, Player, Result, GameResult } from '../types';
+import Leaderboard from '../Leaderboard';
 import AddPlayer from '../AddPlayer';
 import AddGame from '../AddGame';
 import produce from 'immer';
+import { CssBaseline } from '@material-ui/core';
 
 const App: React.FunctionComponent = () => {
   const [ players, setPlayers ] = useState<{[playerID: number] : Player}>({});
@@ -68,17 +70,13 @@ const App: React.FunctionComponent = () => {
     },
   });
 
-  const sortedPlayers = Object.entries(players).sort((a, b) => b[1].rating - a[1].rating);
-
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline/>
       <div className="App">
         <AddPlayer players={players} addPlayer={addPlayer}/>
         <AddGame players={players} addGameResult={addGameResult}/>
-        <h1>Leaderboard</h1>
-        {sortedPlayers.map(([playerID, player], index) =>
-          <div key={playerID}>{index + 1}. {player.name} : {player.rating.toFixed(1)}</div>
-        )}
+        <Leaderboard players={players} />
       </div>
     </ThemeProvider>
   );

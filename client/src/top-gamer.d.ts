@@ -1,4 +1,4 @@
-declare namespace leaderboard {
+declare namespace TopGamer {
   export interface Player {
     id: number,
     name: string
