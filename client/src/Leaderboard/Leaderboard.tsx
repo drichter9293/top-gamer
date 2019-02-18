@@ -20,7 +20,7 @@ const styles = (theme: Theme) => ({
   listBody: {
     width: '100%',
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'baseline',
   },
   placement: {
     marginRight: theme.spacing.unit * 2,
@@ -44,7 +44,7 @@ const Leaderboard: React.FunctionComponent<Props> = ({ players, classes }) => {
 
   return (
     <Paper className={classes.paper}>
-      <Typography variant="h3" gutterBottom>
+      <Typography variant="h3" align="center" gutterBottom>
         Leaderboard
       </Typography>
       <List>
