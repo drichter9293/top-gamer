@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
+import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+
 import { Player } from '../types';
 
 const useStyles = makeStyles(theme => ({

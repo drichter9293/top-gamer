@@ -1,9 +1,10 @@
 import React from 'react';
 
-import { Avatar } from '@material-ui/core';
-import { Player } from '../types';
-
 import toMaterialStyle from 'material-color-hash';
+
+import { Avatar } from '@material-ui/core';
+
+import { Player } from '../types';
 
 interface Props {
   player: Player;

@@ -2,17 +2,17 @@ import React from 'react';
 
 import {
   Button,
-  TextField,
   Dialog,
-  DialogTitle,
   DialogActions,
   DialogContent,
+  DialogTitle,
+  TextField,
   Theme,
 } from '@material-ui/core';
-import { withStyles, WithStyles } from '@material-ui/styles';
 import { PersonAdd } from '@material-ui/icons';
+import { withStyles, WithStyles } from '@material-ui/styles';
 
-import { Player, NewPlayer } from '../types';
+import { NewPlayer, Player } from '../types';
 
 const styles = (theme: Theme) => ({
   addPlayerButton: {

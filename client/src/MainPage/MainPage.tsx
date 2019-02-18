@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+
 import axios from 'axios';
+import produce from 'immer';
+
 import { Theme, withStyles } from '@material-ui/core/styles';
 import { WithStyles } from '@material-ui/styles';
 
-import { NewPlayer, Player, Result, GameResult } from '../types';
-import Leaderboard from '../Leaderboard';
-import AddPlayer from '../AddPlayer';
 import AddGame from '../AddGame';
-import produce from 'immer';
+import AddPlayer from '../AddPlayer';
+import Leaderboard from '../Leaderboard';
+import { GameResult, NewPlayer, Player, Result } from '../types';
 
 const styles = (theme: Theme) => ({
   buttonRow: {

@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { Typography, Paper, List, ListItem, Theme } from '@material-ui/core';
+import { List, ListItem, Paper, Theme, Typography } from '@material-ui/core';
 import { withStyles, WithStyles } from '@material-ui/styles';
 
-import { Player } from '../types';
 import PlayerAvatar from '../PlayerAvatar';
+import { Player } from '../types';
 
 const styles = (theme: Theme) => ({
   '@global': {

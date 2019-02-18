@@ -1,20 +1,20 @@
 import React from 'react';
 
-import {
-  IconButton,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogActions,
-  DialogContent,
-  Theme,
-} from '@material-ui/core';
-import { useTheme, withStyles, WithStyles } from '@material-ui/styles';
-import { PersonAdd, VideogameAsset } from '@material-ui/icons';
-
 import produce from 'immer';
 
-import { Player, GameResult } from '../types';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Theme,
+} from '@material-ui/core';
+import { PersonAdd, VideogameAsset } from '@material-ui/icons';
+import { useTheme, withStyles, WithStyles } from '@material-ui/styles';
+
+import { GameResult, Player } from '../types';
 import PlayerSelect from './PlayerSelect';
 
 const styles = (theme: Theme) => ({
