@@ -7,7 +7,8 @@
     "build": "tsc",
     "prestart": "npm run build",
     "start": "PORT=3001 node build/server.js",
-    "start:prod": "node build/server.js"
+    "start:prod": "node build/server.js",
+    "db:create": "psql -X1v ON_ERROR_STOP=1 top_gamer -f ./src/db/sql/create.sql"
   },
   "dependencies": {
     "@types/cors": "^2.8.4",
